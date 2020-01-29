@@ -1,2 +1,2 @@
 # pyTrivia
-Python wrapper for OpenTriviaDB
+Python wrapper for [OpenTriviaDB](https://opentdb.com/)
