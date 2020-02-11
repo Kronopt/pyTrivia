@@ -32,6 +32,10 @@ class Client:
         Total question count lookup url.
     HTTP_HEADER : dict
         HTTP header sent with every request.
+    token : str
+        Token in use.
+    categories : dict
+        Categories and respective ids.
     """
 
     MAIN_URL = 'https://opentdb.com/'
@@ -45,6 +49,89 @@ class Client:
         'User-Agent': 'pyTrivia/' + __version__,
         'Content-Type': 'application/json'
     }
+
+    def __init__(self):
+        """
+        Initializes the pyTrivia client.
+        Performs 2 requests to the OpenTriviaDB API:
+            - Token request
+            - Categories request
+
+        Raises
+        ------
+        ValueError
+            If the HTTP response body does not contain valid json (request.json error).
+        HttpError
+            If the HTTP code is not 200 OK.
+        NoResults, InvalidParameter, TokenNotFound, TokenEmpty, UnexpectedResponseCode
+            If the OpenTriviaDB response code is not 0.
+        """
+        self.token = self._get_token()
+        self.categories = self._get_categories()
+
+    def _get_token(self, reset=False):
+        """
+        Retrieves an OpenTriviaDB session token.
+
+        Parameters
+        ----------
+        reset : bool, optional
+            Token is reset if True, a new token is retrieved otherwise.
+
+        Returns
+        -------
+        str
+            OpenTriviaDB session token.
+
+        Raises
+        ------
+        ValueError
+            If the HTTP response body does not contain valid json (request.json error).
+        HttpError
+            If the HTTP code is not 200 OK.
+        NoResults, InvalidParameter, TokenNotFound, TokenEmpty, UnexpectedResponseCode
+            If the OpenTriviaDB response code is not 0.
+        """
+        if reset:
+            token_url = '%s?command=reset&token=%s' % (self.TOKEN_URL, self.token)
+        else:
+            token_url = '%s?command=request' % self.TOKEN_URL
+        json = self._request_resource(token_url)
+        return json['token']
+
+    def _get_categories(self):
+        """
+        Retrieves all OpenTriviaDB categories and respective ids.
+
+        Raises
+        ------
+        ValueError
+            If the HTTP response body does not contain valid json (request.json error).
+        HttpError
+            If the HTTP code is not 200 OK.
+        NoResults, InvalidParameter, TokenNotFound, TokenEmpty, UnexpectedResponseCode
+            If the OpenTriviaDB response code is not 0.
+
+        Returns
+        -------
+        dict
+            OpenTriviaDB categories (keys) and ids (values).
+
+        Raises
+        ------
+        ValueError
+            If the HTTP response body does not contain valid json (request.json error).
+        HttpError
+            If the HTTP code is not 200 OK.
+        NoResults, InvalidParameter, TokenNotFound, TokenEmpty, UnexpectedResponseCode
+            If the OpenTriviaDB response code is not 0.
+        """
+        json = self._request_resource(self.ALL_CATEGORIES_URL)
+        # Assumes json is structured as per the OpenTriviaDB documentation.
+        # Any error that arises from "wrong" dictionary keys is because json response was
+        # altered by OpenTriviaDB in the meanwhile.
+        categories = {category['name']: category['id'] for category in json['trivia_categories']}
+        return categories
 
     def _request_resource(self, url):
         """
