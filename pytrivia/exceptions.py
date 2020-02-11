@@ -81,3 +81,22 @@ class TokenEmpty(OpenTriviaDBException):
         self.code = 4
         self.message = 'Session Token has returned all possible questions for the specified query. ' \
                        'Resetting the Token is necessary.'
+
+
+class HttpError(OpenTriviaDBException):
+    """
+    HTTP status code received was not 200 OK.
+
+    Attributes
+    ----------
+    status_code : int
+        HTTP status code.
+    message : str
+        HTTP text corresponding to status code.
+    """
+    def __init__(self, status_code, message):
+        self.status_code = status_code
+        self.message = message
+
+    def __str__(self):
+        return 'Received HTTP status code %i: %s. Expected 200: OK' % (self.status_code, self.message)
