@@ -2,7 +2,7 @@
 # coding: utf-8
 
 """
-Question class - Represents a question retrieved from OpenTriviaDB
+Question class - Represents a question retrieved from OpenTriviaDB.
 """
 
 import html
