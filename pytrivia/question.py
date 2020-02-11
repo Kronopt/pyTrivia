@@ -54,8 +54,8 @@ class Question:
             Incorrect answers to question.
         """
         self.category = category
-        self.type = type.capitalize()
-        self.difficulty = difficulty.capitalize()
+        self.type = type
+        self.difficulty = difficulty
         self.question = html.unescape(question)
         self.correct_answer = html.unescape(correct_answer)
         self.incorrect_answers = [html.unescape(incorrect_answer) for incorrect_answer in incorrect_answers]
