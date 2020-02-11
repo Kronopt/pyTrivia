@@ -16,7 +16,7 @@ class OpenTriviaDBException(Exception):
 class NoResults(OpenTriviaDBException):
     """
     Could not return results.
-    The API doesn't have enough questions for your query.
+    The OpenTriviaDB API doesn't have enough questions for your query.
     Ex: Asking for 50 Questions in a Category that only has 20.
 
     Attributes
@@ -28,7 +28,7 @@ class NoResults(OpenTriviaDBException):
     """
     def __init__(self):
         self.code = 1
-        self.message = 'Could not return results. The API doesn\'t have enough questions for your query.'
+        self.message = 'Could not return results. The OpenTriviaDB API doesn\'t have enough questions for your query.'
 
 
 class InvalidParameter(OpenTriviaDBException):
@@ -81,6 +81,25 @@ class TokenEmpty(OpenTriviaDBException):
         self.code = 4
         self.message = 'Session Token has returned all possible questions for the specified query. ' \
                        'Resetting the Token is necessary.'
+
+
+class UnexpectedResponseCode(OpenTriviaDBException):
+    """
+    Unexpected OpenTriviaDB response code received (not defined in the OpenTriviaDB documentation).
+
+    Attributes
+    ----------
+    code : str
+        Exception code.
+    message : str
+        Exception message.
+    """
+    def __init__(self, code):
+        self.code = code
+        self.message = 'Unexpected OpenTriviaDB response code received: %s' % code
+
+    def __str__(self):
+        return self.message
 
 
 class HttpError(OpenTriviaDBException):
