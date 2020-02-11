@@ -54,7 +54,8 @@ class Client:
         When calling get_questions, if difficulty is not a str in self.difficulties.
         When calling get_questions, if _type is not a str in self.types.
     ValueError
-        When calling __init__, get_questions, if the HTTP response body does not contain valid json (request.json error).
+        When calling __init__, get_questions, if the HTTP response body does not contain valid json
+        (request.json error).
     HttpError
         When calling __init__, get_questions, if the HTTP code is not 200 OK.
     NoResults, InvalidParameter, TokenNotFound, TokenEmpty, UnexpectedResponseCode
